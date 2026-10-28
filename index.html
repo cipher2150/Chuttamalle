@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workshop Launchpad</title>
+<meta name="description" content="Free workshop: Build Your First AI Project in 60 Minutes. Register, get a referral link, track the campaign.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0}
+/* Layout: hero with live seat counter, then three tabs (Register, Tracker, Ambassador kit). Ink-navy and signal-orange, matching the growth deck. */
+:root{
+  --bg:#F1F3F8; --surface:#FFFFFF; --ink:#12182B; --muted:#5A6275; --line:#DCE0EA;
+  --accent:#C2410C; --accent-soft:#FDEBDD; --accent-fill:#E8590C; --on-accent:#FFFFFF;
+  --good:#0F766E; --good-soft:#DDF3EF; --track:#E3E7F0;
+  --display:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1322; --surface:#171E33; --ink:#EEF1F8; --muted:#9AA3BA; --line:#2A3452;
+  --accent:#FF9A5C; --accent-soft:#3A2418; --accent-fill:#FF9A5C; --on-accent:#12182B;
+  --good:#4FD1BF; --good-soft:#143B38; --track:#26304D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1322; --surface:#171E33; --ink:#EEF1F8; --muted:#9AA3BA; --line:#2A3452;
+  --accent:#FF9A5C; --accent-soft:#3A2418; --accent-fill:#FF9A5C; --on-accent:#12182B;
+  --good:#4FD1BF; --good-soft:#143B38; --track:#26304D; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.1}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;align-items:end}
+.hero h1{font-size:clamp(34px,5.4vw,58px);font-weight:800;letter-spacing:-.02em}
+.hero h1 span{color:var(--accent)}
+.hero p.lead{margin-top:14px;color:var(--muted);max-width:52ch;font-size:18px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-size:14px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.seats{background:var(--ink);color:var(--bg);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.seats .n{font-family:var(--mono);font-weight:700;font-size:44px;line-height:1}
+.seats .n small{font-size:18px;opacity:.7;font-weight:500}
+.seats .lab{font-size:14px;opacity:.8}
+.bar{height:10px;border-radius:999px;background:var(--track);overflow:hidden}
+.seats .bar{background:rgba(255,255,255,.18)}
+.bar>i{display:block;height:100%;background:var(--accent-fill);border-radius:999px;transition:width .5s}
+.tag-example{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-weight:700;width:fit-content}
+.seats .tag-example{background:rgba(255,255,255,.14);color:var(--bg)}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font:700 16px var(--body);padding:10px 16px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent-fill)}
+.tab:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent-fill);outline-offset:2px}
+
+.panel{display:none}.panel.on{display:block}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.card h2{font-size:26px;font-weight:600}
+.card h3{font-size:19px;font-weight:600}
+.sub{color:var(--muted);font-size:15px}
+
+form{display:flex;flex-direction:column;gap:16px}
+label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+input[type=text],input[type=tel]{font:500 17px var(--body);padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+input.bad{border-color:#D64545}
+.err{color:#D64545;font-size:13px;font-weight:500;min-height:0}
+.btn{appearance:none;border:0;border-radius:12px;font:700 17px var(--body);padding:14px 20px;cursor:pointer;background:var(--accent-fill);color:var(--on-accent)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.sm{font-size:14px;padding:8px 12px;border-radius:10px}
+.btn:hover{filter:brightness(1.06)}
+.via{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);background:var(--good-soft);padding:10px 12px;border-radius:12px;color:var(--good);font-weight:700}
+.steps{display:flex;flex-direction:column;gap:14px;counter-reset:s}
+.steps li{list-style:none;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--mono);font-weight:700;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.steps{padding:0;margin:0}
+.steps b{display:block}
+
+.done{display:none;flex-direction:column;gap:16px}
+.done.on{display:flex}
+.code{font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:.14em;color:var(--accent);background:var(--accent-soft);border-radius:14px;padding:14px 18px;width:fit-content}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+textarea.msg,.msgbox{font:500 15px/1.55 var(--body);width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:14px;white-space:pre-wrap;min-height:130px;resize:vertical}
+
+.trk-top{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+.stat .v{font-family:var(--mono);font-weight:700;font-size:32px}
+.stat .l{font-size:14px;color:var(--muted)}
+.ch{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr) 92px;gap:14px;align-items:center;font-size:15px}
+.ch .nm{font-weight:700}
+.ch .ct{font-family:var(--mono);text-align:right;font-size:14px}
+.lb{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+.lb li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.lb li:last-child{border:0}
+.lb .rk{font-family:var(--mono);font-weight:700;color:var(--muted)}
+.lb li.win .rk{color:var(--accent)}
+.lb .who{min-width:0}.lb .who b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .who small{color:var(--muted);font-size:13px}
+.lb .n{font-family:var(--mono);font-weight:700}
+.pill{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--good-soft);color:var(--good);margin-left:8px;white-space:nowrap}
+svg.spark{width:100%;height:auto;display:block}
+svg.spark text{fill:var(--muted);font:500 11px var(--mono)}
+.insight{border-left:4px solid var(--accent-fill);padding:12px 16px;background:var(--accent-soft);border-radius:0 12px 12px 0;font-size:15px}
+.linkrow{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}
+.linkrow code{font-family:var(--mono);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--bg);padding:8px 10px;border-radius:8px;border:1px solid var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.foot{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+@media (max-width:820px){
+  .hero,.grid2,.trk-top{grid-template-columns:minmax(0,1fr)}
+  .ch{grid-template-columns:minmax(0,1fr) 84px}.ch .bar{grid-column:1/-1;order:3}
+  .linkrow{grid-template-columns:minmax(0,1fr) auto}.linkrow>span{grid-column:1/-1;font-weight:700}
+}
+@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Free live workshop · 60 minutes</p>
+      <h1>Build your first <span>AI project</span> in 60 minutes</h1>
+      <p class="lead">Leave with a working project you can put on your resume tonight. No prerequisites. Built for final-year engineering students.</p>
+      <div class="facts"><span class="chip">Free</span><span class="chip">Live, hands-on</span><span class="chip">Resume-ready project</span></div>
+    </div>
+    <div class="seats" aria-live="polite">
+      <span class="tag-example" id="seatsTag" hidden>Example data</span>
+      <div class="n"><span id="seatN">0</span> <small>/ 500 seats</small></div>
+      <div class="bar" aria-hidden="true"><i id="seatBar" style="width:0%"></i></div>
+      <div class="lab" id="seatLab"></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="t-register" aria-selected="true" data-tab="register">Register</button>
+    <button class="tab" role="tab" id="t-tracker" aria-selected="false" data-tab="tracker">Campaign tracker</button>
+    <button class="tab" role="tab" id="t-kit" aria-selected="false" data-tab="kit">Ambassador kit</button>
+  </nav>
+
+  <!-- REGISTER -->
+  <section class="panel on" id="p-register" role="tabpanel" aria-labelledby="t-register">
+    <div class="grid2">
+      <div class="card">
+        <div id="formWrap">
+          <h2>Save your seat</h2>
+          <p class="sub" style="margin-top:6px">Three fields. Takes about 20 seconds.</p>
+          <div id="via" class="via" hidden style="margin-top:16px"></div>
+          <form id="f" novalidate style="margin-top:18px">
+            <label for="name">Full name<input type="text" id="name" autocomplete="name" placeholder="e.g. Aarav Sharma"><span class="err" id="e-name"></span></label>
+            <label for="college">College<input type="text" id="college" placeholder="e.g. SRM University AP"><span class="err" id="e-college"></span></label>
+            <label for="phone">WhatsApp number<input type="tel" id="phone" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number"><span class="err" id="e-phone"></span></label>
+            <button class="btn" type="submit">Register for free</button>
+          </form>
+        </div>
+        <div class="done" id="done">
+          <p class="eyebrow">You are in</p>
+          <h2 id="doneTitle"></h2>
+          <p class="sub">The workshop link and reminders will reach you on WhatsApp. Bring a friend and climb the leaderboard: the top 8 referrers win a ₹100 recharge voucher.</p>
+          <div><p class="sub" style="margin-bottom:6px">Your referral code</p><div class="code" id="myCode"></div></div>
+          <textarea class="msg" id="shareMsg" readonly aria-label="Message to share"></textarea>
+          <div class="row">
+            <a class="btn" id="waBtn" target="_blank" rel="noopener" style="text-decoration:none">Share on WhatsApp</a>
+            <button class="btn ghost" type="button" id="copyMsg">Copy message</button>
+          </div>
+          <button class="btn ghost sm" type="button" id="again" style="width:fit-content">Register another student</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>What you will build</h2>
+        <ol class="steps">
+          <li><div><b>Pick a problem you care about</b><span class="sub">Resume screener, study buddy, campus FAQ bot. You choose.</span></div></li>
+          <li><div><b>Build it with AI tools, live</b><span class="sub">We write prompts and wire the pieces together step by step.</span></div></li>
+          <li><div><b>Ship it and show it</b><span class="sub">You finish with a link you can put on your resume and LinkedIn.</span></div></li>
+        </ol>
+        <div class="insight">Why it works: students trust a classmate’s forward more than an ad, so every registration gets a personal link to share.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACKER -->
+  <section class="panel" id="p-tracker" role="tabpanel" aria-labelledby="t-tracker">
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div class="trk-top">
+        <div class="stat"><span class="v" id="sTotal">0</span><span class="l">Registrations</span></div>
+        <div class="stat"><span class="v" id="sPace">0</span><span class="l" id="sPaceL">Needed per day to reach 500</span></div>
+        <div class="stat"><span class="v" id="sBest">–</span><span class="l">Best channel vs plan</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div><h2>Channels vs plan</h2><p class="sub" style="margin-top:6px">Registrations by the link each student arrived through.</p></div>
+          <div id="chBars" style="display:flex;flex-direction:column;gap:16px"></div>
+          <div class="insight" id="chInsight"></div>
+        </div>
+        <div class="card">
+          <div><h2>Registrations per day</h2><p class="sub" style="margin-top:6px">Seven-day campaign window.</p></div>
+          <div id="spark"></div>
+          <div><h3>Top colleges</h3><ol class="lb" id="colleges" style="margin-top:6px"></ol></div>
+        </div>
+      </div>
+      <div class="card">
+        <div><h2>Referral leaderboard</h2><p class="sub" style="margin-top:6px">Top 8 earn a ₹100 recharge voucher. Updates the moment a friend registers.</p></div>
+        <ol class="lb" id="board"></ol>
+      </div>
+      <div class="foot">
+        <span id="modeNote"></span>
+        <span class="row"><button class="btn ghost sm" id="copyCsv" type="button">Copy contacts as CSV</button><button class="btn ghost sm" id="clearData" type="button" hidden>Clear my test entries</button></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- KIT -->
+  <section class="panel" id="p-kit" role="tabpanel" aria-labelledby="t-kit">
+    <div class="grid2">
+      <div class="card">
+        <div><h2>Tracked links</h2><p class="sub" style="margin-top:6px">One link per channel. Each registration is credited to the channel and the ambassador code in its link.</p></div>
+        <div id="links" style="display:flex;flex-direction:column;gap:12px"></div>
+      </div>
+      <div class="card">
+        <div><h2>Ready-to-send messages</h2><p class="sub" style="margin-top:6px" id="kitNote"></p></div>
+        <div style="display:flex;flex-direction:column;gap:18px" id="msgs"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot"><span>Prototype for the NxtWave Growth Challenge. Entries are saved in this browser only; a live version would write to a shared sheet or database.</span></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  var PAGE_URL = ""; // empty = use the page's own URL
+  var TARGET = 500, DAYS = 7;
+  var CH = {
+    wa:{label:"WhatsApp groups and clubs",plan:260,hash:"c-wa"},
+    friend:{label:"Referral loop",plan:100,hash:null},
+    reel:{label:"Instagram and LinkedIn reel",plan:70,hash:"c-reel"},
+    tpo:{label:"Placement-cell email",plan:70,hash:"c-tpo"},
+    direct:{label:"Direct, no tracked link",plan:0,hash:null}
+  };
+  var CHORDER = ["wa","friend","reel","tpo","direct"];
+  var KEY = "nxtwave-launchpad-v1";
+  var SAMPLE = {
+    days:[22,64,98,88,0,0,0],
+    ch:{wa:142,friend:51,reel:38,tpo:29,direct:12},
+    colleges:[["Example College 1",64],["Example College 2",51],["Example College 3",44],["Example College 4",37],["Example College 5",29]],
+    board:[["Ananya","Example College 2",19],["Rohan","Example College 1",16],["Meera","Example College 4",14],["Kabir","Example College 1",12],["Sana","Example College 3",11],["Dev","Example College 5",9],["Ishita","Example College 2",8],["Tarun","Example College 3",7],["Nisha","Example College 4",5]]
+  };
+  var $ = function(id){return document.getElementById(id)};
+  var esc = function(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+
+  var mem = [];
+  function load(){try{var r=localStorage.getItem(KEY);return r?JSON.parse(r):mem}catch(e){return mem}}
+  function save(a){mem=a;try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+  var mineKey = KEY+"-me", mineMem = null;
+  function getMine(){try{return localStorage.getItem(mineKey)||mineMem}catch(e){return mineMem}}
+  function setMine(c){mineMem=c;try{localStorage.setItem(mineKey,c)}catch(e){}}
+
+  // Link context: #c-wa.r-AB12CD  (channel + referrer)
+  var ctx = {ch:null,ref:null};
+  (function(){
+    var h = (location.hash||"").replace(/^#/,"");
+    h.split(".").forEach(function(p){
+      if(p.indexOf("c-")===0){var k=p.slice(2);if(CH[k]&&CH[k].hash)ctx.ch=k}
+      else if(p.indexOf("r-")===0){ctx.ref=p.slice(2).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8)||null}
+    });
+  })();
+
+  function hash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+  function codeFor(phone){return hash("nw"+phone).toString(36).toUpperCase().padStart(6,"0").slice(0,6)}
+  function normPhone(v){var d=String(v).replace(/\D/g,"");if(d.length===12&&d.indexOf("91")===0)d=d.slice(2);return /^[6-9]\d{9}$/.test(d)?d:null}
+  function base(){return (PAGE_URL||location.href).split("#")[0]}
+  function linkFor(chKey,code){
+    var parts=[];if(CH[chKey]&&CH[chKey].hash)parts.push(CH[chKey].hash);if(code)parts.push("r-"+code);
+    return base()+(parts.length?"#"+parts.join("."):"");
+  }
+  function toast(t){var e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("on")},1800)}
+  function copy(text,btnMsg){
+    function fb(){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(btnMsg||"Copied")}catch(e){toast("Select and copy manually")}document.body.removeChild(ta)}
+    try{navigator.clipboard.writeText(text).then(function(){toast(btnMsg||"Copied")},fb)}catch(e){fb()}
+  }
+  function shareText(code){
+    return "Free workshop for final-year engineering students: Build Your First AI Project in 60 Minutes. You leave with a working project for your resume. Register here and use my code "+code+":\n"+linkFor(ctx.ch||"wa",code);
+  }
+
+  // Tabs
+  function showTab(k){
+    ["register","tracker","kit"].forEach(function(t){
+      $("p-"+t).classList.toggle("on",t===k);
+      $("t-"+t).setAttribute("aria-selected",t===k?"true":"false");
+    });
+    if(k==="tracker")renderTracker();
+    if(k==="kit")renderKit();
+  }
+  document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){showTab(b.getAttribute("data-tab"))})});
+
+  // Register
+  if(ctx.ch||ctx.ref){
+    var v=$("via");v.hidden=false;
+    v.textContent=ctx.ref&&!ctx.ch?"You were invited by a friend with code "+ctx.ref:"You arrived through "+CH[ctx.ch||"friend"].label.toLowerCase()+(ctx.ref?" · code "+ctx.ref:"");
+  }
+  function setErr(id,msg){$("e-"+id).textContent=msg||"";$(id).classList.toggle("bad",!!msg)}
+  $("f").addEventListener("submit",function(ev){
+    ev.preventDefault();
+    var name=$("name").value.trim(),college=$("college").value.trim(),phone=normPhone($("phone").value);
+    setErr("name",name.length<2?"Enter your full name.":"");
+    setErr("college",college.length<2?"Enter your college name.":"");
+    setErr("phone",phone?"":"Enter a valid 10-digit Indian mobile number.");
+    if(name.length<2||college.length<2||!phone)return;
+    var all=load(),code=codeFor(phone),existing=all.filter(function(r){return r.id===code})[0];
+    if(!existing){
+      existing={id:code,name:name,college:college,phone:phone,code:code,ch:ctx.ch||(ctx.ref?"friend":"direct"),ref:(ctx.ref&&ctx.ref!==code)?ctx.ref:null,ts:Date.now()};
+      all.push(existing);save(all);
+    }
+    setMine(code);
+    $("formWrap").style.display="none";
+    $("done").classList.add("on");
+    $("doneTitle").textContent=(existing.name.split(" ")[0])+", your seat is saved.";
+    $("myCode").textContent=code;
+    var msg=shareText(code);$("shareMsg").value=msg;
+    $("waBtn").href="https://wa.me/?text="+encodeURIComponent(msg);
+    renderSeats();
+  });
+  $("copyMsg").addEventListener("click",function(){copy($("shareMsg").value,"Message copied")});
+  $("again").addEventListener("click",function(){
+    $("f").reset();$("done").classList.remove("on");$("formWrap").style.display="";
+  });
+
+  // Data views
+  function view(){
+    var rows=load();
+    if(rows.length){
+      var ch={wa:0,friend:0,reel:0,tpo:0,direct:0};
+      rows.forEach(function(r){ch[r.ch in ch?r.ch:"direct"]++});
+      var t0=Math.min.apply(null,rows.map(function(r){return r.ts}));
+      var days=new Array(DAYS).fill(0);
+      rows.forEach(function(r){var d=Math.min(DAYS-1,Math.floor((r.ts-t0)/864e5));days[d]++});
+      var byCode={};rows.forEach(function(r){byCode[r.code]=r});
+      var refs={};rows.forEach(function(r){if(r.ref)refs[r.ref]=(refs[r.ref]||0)+1});
+      var board=Object.keys(refs).map(function(c){var p=byCode[c];return [p?p.name.split(" ")[0]:"Code "+c,p?p.college:"Referrer not yet registered here",refs[c]]}).sort(function(a,b){return b[2]-a[2]});
+      var col={};rows.forEach(function(r){var k=r.college.trim();col[k]=(col[k]||0)+1});
+      var colleges=Object.keys(col).map(function(k){return [k,col[k]]}).sort(function(a,b){return b[1]-a[1]}).slice(0,5);
+      return {sample:false,total:rows.length,days:days,ch:ch,board:board,colleges:colleges};
+    }
+    var tot=SAMPLE.days.reduce(function(a,b){return a+b},0);
+    return {sample:true,total:tot,days:SAMPLE.days,ch:SAMPLE.ch,board:SAMPLE.board,colleges:SAMPLE.colleges};
+  }
+  function renderSeats(){
+    var v=view(),pct=Math.min(100,v.total/TARGET*100);
+    $("seatN").textContent=v.total;$("seatBar").style.width=pct+"%";
+    $("seatsTag").hidden=!v.sample;
+    $("seatLab").textContent=v.sample?"Example numbers shown until the first real registration.":(Math.max(0,TARGET-v.total)+" seats left to the 500 goal");
+  }
+  function renderTracker(){
+    var v=view();
+    $("sTotal").textContent=v.total;
+    var used=v.days.reduce(function(n,d,i){return d>0?i+1:n},0)||1,left=Math.max(0,DAYS-used),need=left?Math.ceil(Math.max(0,TARGET-v.total)/left):0;
+    $("sPace").textContent=need;$("sPaceL").textContent=left?"Needed per day for the last "+left+" day"+(left>1?"s":""):"Campaign window complete";
+    var best=null,bestR=-1;
+    CHORDER.forEach(function(k){if(CH[k].plan){var r=v.ch[k]/CH[k].plan;if(r>bestR){bestR=r;best=k}}});
+    $("sBest").textContent=best&&bestR>0?Math.round(bestR*100)+"%":"–";
+    $("chBars").innerHTML=CHORDER.map(function(k){
+      var c=CH[k],n=v.ch[k],pct=c.plan?Math.min(100,n/c.plan*100):0;
+      return '<div class="ch"><span class="nm">'+esc(c.label)+'</span><div class="bar" role="img" aria-label="'+esc(c.label)+' '+n+(c.plan?" of "+c.plan:"")+'"><i style="width:'+(c.plan?pct:Math.min(100,n/Math.max(1,v.total)*100))+'%;'+(c.plan?'':'background:var(--muted)')+'"></i></div><span class="ct">'+n+(c.plan?" / "+c.plan:"")+'</span></div>';
+    }).join("");
+    var worst=null,worstR=9;CHORDER.forEach(function(k){if(CH[k].plan){var r=v.ch[k]/CH[k].plan;if(r<worstR){worstR=r;worst=k}}});
+    $("chInsight").textContent=best&&worst&&best!==worst?("Day-4 decision: "+CH[best].label+" is at "+Math.round(bestR*100)+"% of plan and "+CH[worst].label+" is at "+Math.round(worstR*100)+"%. Move the ₹400 reserve toward the stronger channel."):"Compare each channel against its plan to decide where the ₹400 reserve goes on Day 4.";
+    var mx=Math.max.apply(null,v.days.concat([1])),W=280,H=96,bw=28,gap=(W-bw*DAYS)/(DAYS-1),s='<svg class="spark" viewBox="0 0 '+W+' '+(H+22)+'" role="img" aria-label="Registrations per day">';
+    v.days.forEach(function(d,i){var h=Math.round(d/mx*(H-16)),x=i*(bw+gap);
+      s+='<rect x="'+x.toFixed(1)+'" y="'+(H-h)+'" width="'+bw+'" height="'+Math.max(h,d?2:0)+'" rx="4" fill="'+(d?'var(--accent-fill)':'var(--track)')+'"/>';
+      if(d)s+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-h-5)+'" text-anchor="middle">'+d+'</text>';
+      s+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H+16)+'" text-anchor="middle">D'+(i+1)+'</text>';});
+    $("spark").innerHTML=s+'</svg>';
+    $("colleges").innerHTML=v.colleges.map(function(c,i){return '<li><span class="rk">'+(i+1)+'</span><span class="who"><b>'+esc(c[0])+'</b></span><span class="n">'+c[1]+'</span></li>'}).join("");
+    $("board").innerHTML=v.board.length?v.board.slice(0,10).map(function(b,i){return '<li class="'+(i<8?'win':'')+'"><span class="rk">#'+(i+1)+'</span><span class="who"><b>'+esc(b[0])+(i<8?'<span class="pill">₹100 zone</span>':'')+'</b><small>'+esc(b[1])+'</small></span><span class="n">'+b[2]+' friends</span></li>'}).join(""):'<li><span></span><span class="sub">No referrals yet. Share your link and the first friend appears here.</span><span></span></li>';
+    $("modeNote").innerHTML=v.sample?'<span class="tag-example">Example data</span> Register on the first tab to replace it with real entries.':'Showing '+v.total+' registration'+(v.total>1?'s':'')+' saved in this browser.';
+    $("clearData").hidden=v.sample;
+    renderSeats();
+  }
+  $("copyCsv").addEventListener("click",function(){
+    var rows=load();
+    if(!rows.length){toast("No registrations to copy yet");return}
+    var csv="name,college,whatsapp,code,channel,referred_by,registered_at\n"+rows.map(function(r){return [r.name,r.college,r.phone,r.code,r.ch,r.ref||"",new Date(r.ts).toISOString()].map(function(x){return '"'+String(x).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+    copy(csv,"CSV copied");
+  });
+  $("clearData").addEventListener("click",function(){save([]);renderTracker();toast("Test entries cleared")});
+
+  function renderKit(){
+    var code=getMine()||"YOURCODE";
+    $("kitNote").textContent=getMine()?"Filled with your code "+code+".":"Register first and your personal code appears here. Until then these show a placeholder.";
+    $("links").innerHTML=[["wa","Ambassador: WhatsApp and clubs"],["reel","Instagram and LinkedIn bio"],["tpo","Placement-cell email"]].map(function(x){
+      var l=linkFor(x[0],getMine()||null);
+      return '<div class="linkrow"><span>'+esc(x[1])+'</span><code title="'+esc(l)+'">'+esc(l)+'</code><button class="btn ghost sm" data-copy="'+esc(l)+'" type="button">Copy</button></div>';
+    }).join("")+'<div class="linkrow"><span>Friend referral</span><code>'+esc(linkFor(null,getMine()||null))+'</code><button class="btn ghost sm" data-copy="'+esc(linkFor(null,getMine()||null))+'" type="button">Copy</button></div>';
+    var T=[
+      ["WhatsApp group","Hi all! NxtWave is running a FREE workshop: Build Your First AI Project in 60 Minutes. You finish with a working project for your resume. Register in 20 seconds: "+linkFor("wa",getMine()||null)+"  (use my code "+code+")"],
+      ["Instagram story","Final-year? Build your first AI project in 60 minutes, free. Link in bio. Code "+code+" gets you a seat. "+linkFor("reel",getMine()||null)],
+      ["Email to placement cell","Subject: Free 60-minute AI project workshop for final-year students\n\nDear Sir/Madam,\n\nNxtWave is hosting a free live workshop, Build Your First AI Project in 60 Minutes, for final-year engineering students. Students leave with a working project for their resume. Please forward this link to your final-year batch: "+linkFor("tpo",getMine()||null)+"\n\nThank you."]
+    ];
+    $("msgs").innerHTML=T.map(function(t,i){return '<div style="display:flex;flex-direction:column;gap:8px"><h3>'+esc(t[0])+'</h3><div class="msgbox" id="m'+i+'">'+esc(t[1])+'</div><button class="btn ghost sm" style="width:fit-content" data-copy-id="m'+i+'" type="button">Copy message</button></div>'}).join("");
+  }
+  document.addEventListener("click",function(e){
+    var b=e.target.closest("[data-copy],[data-copy-id]");if(!b)return;
+    if(b.hasAttribute("data-copy"))copy(b.getAttribute("data-copy"),"Link copied");
+    else copy($(b.getAttribute("data-copy-id")).textContent,"Message copied");
+  });
+
+  renderSeats();
+})();
+</script>
+</body>
+</html>
